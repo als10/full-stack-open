@@ -4,7 +4,14 @@ const Title = ({text}) => <h1>{text}</h1>
 
 const Button = ({handleClick, text}) => <button onClick={handleClick}>{text}</button>
 
-const Statistic = ({text, value}) => <div>{text} {value}</div>
+const Statistic = ({text, value}) => {
+  return (
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
+  )
+}
 
 const Statistics = ({good, neutral, bad}) => {
 
@@ -18,14 +25,14 @@ const Statistics = ({good, neutral, bad}) => {
   const percentGood = (good / total) * 100
 
   return (
-    <div>
+    <table>
       <Statistic text='good' value={good} />
       <Statistic text='neutral' value={neutral} />
       <Statistic text='bad' value={bad} />
       <Statistic text='all' value={total} />
       <Statistic text='average' value={avg} />
-      <Statistic text='positive' value={percentGood} />
-    </div>
+      <Statistic text='positive' value={percentGood + '%'} />
+    </table>
   )
 }
 
