@@ -1,0 +1,1 @@
+Solutions for exercises 2.12 to 2.14
