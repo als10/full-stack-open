@@ -1,1 +1,2 @@
-Solutions for exercises 2.1 to 2.5
+# Full Stack Open 2021
+My solutions for the exercises in Full Stack Open 2021
