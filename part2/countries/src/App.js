@@ -16,18 +16,24 @@ const Country = ({ country }) => {
   )
 }
 
-const Countries = ({ countries }) => {
-  if (countries.length > 10) {
-    return <div>Too many matches, specify another filter</div>
-  }
-  if (countries.length === 1) {
-    return <Country country={countries[0]} />
-  }
-  return (
-    <div>
-      {countries.map(country => <div key={country.alpha2Code} >{country.name}</div>)}
-    </div>
-  )
+const Countries = ({ countries, handleClick }) => {
+  if (countries.length === 1) return <Country country={countries[0]} />
+
+
+  return countries.length > 10
+  ? <div>Too many matches, specify another filter</div>
+  : (
+      <div>
+        {countries.map(country => {
+          return (
+            <div key={country.alpha2Code} >
+              {country.name}
+              <button onClick={() => handleClick(country.name)} >show</button>
+            </div>
+          )
+        })}
+      </div>
+    )
 }
 
 const Filter = ({ filter, handleFilterChange }) => {
@@ -56,16 +62,18 @@ const App = () => {
   }, [])
   console.log(countries)
 
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value)
-  }
+  const handleFilterChange = event => setFilter(event.target.value)
 
-  const countriesToShow = countries.filter(country => country.name.toLowerCase().includes(filter))
+  const handleClick = country => setFilter(country)
+
+  const countriesToShow = countries.filter(countries.map(countries => countries.name).includes(filter)
+  ? country => country.name === filter
+  : country => country.name.toLowerCase().includes(filter.toLowerCase()))
 
   return (
     <div>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
-      <Countries countries={countriesToShow} />
+      <Countries countries={countriesToShow} handleClick={handleClick} />
     </div>
   )
 }
