@@ -1,7 +1,34 @@
 POST http://localhost:3001/api/persons
- Content-Type: application/json
+Content-Type: application/json
 
- {
-     "name": "Donald Trump",
-     "number": "1567890145"
- }
+{
+    "name": "Donald Trump",
+    "number": "1567890145"
+}
+
+###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Donald Trump",
+    "number": "32934948"
+}
+
+###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "",
+    "number": "32934948"
+}
+
+###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Joe Biden",
+    "number": ""
+}
