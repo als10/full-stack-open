@@ -103,15 +103,23 @@ const App = () => {
   }
 
   const deletePerson = (id) => {
+    const name = persons.find(person => person.id === id).name
     const result = window.confirm(
-      `Delete ${persons.find(person => person.id === id).name}?`
+      `Delete ${name}?`
     )
     if (!result) return
     personService
       .remove(id)
-      .then(() =>
+      .then(() => {
+        setMessage(
+          {
+            message: `Deleted ${name}`,
+            success: true
+          }
+        )
+        setTimeout(() => setMessage({}), 5000)
         setPersons(persons.filter(person => person.id !== id))
-      )
+      })
   }
 
   const personsToShow = persons.filter(person => person.name.toLowerCase().startsWith(filter.toLowerCase()))
