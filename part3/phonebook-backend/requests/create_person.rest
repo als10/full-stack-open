@@ -32,3 +32,12 @@ Content-Type: application/json
     "name": "Joe Biden",
     "number": ""
 }
+
+###
+POST https://obscure-plateau-56779.herokuapp.com/api/persons
+Content-Type: application/json
+
+{
+    "name": "Donald Trump",
+    "number": "1567890145"
+}
