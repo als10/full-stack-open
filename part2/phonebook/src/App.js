@@ -53,6 +53,18 @@ const App = () => {
       })
   }
 
+  const deletePerson = (id) => {
+    const result = window.confirm(
+      `Delete ${persons.find(person => person.id === id).name}?`
+    )
+    if (!result) return
+    personService
+      .remove(id)
+      .then(() =>
+        setPersons(persons.filter(person => person.id !== id))
+      )
+  }
+
   const personsToShow = persons.filter(person => person.name.toLowerCase().startsWith(filter.toLowerCase()))
 
   return (
@@ -73,7 +85,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} handleClick={deletePerson} />
     </div>
   )
 }
