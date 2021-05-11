@@ -10,7 +10,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [filter, setFilter] = useState('')
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState({})
 
   useEffect(() => {
     personService
@@ -50,11 +50,24 @@ const App = () => {
           )
         )
         setMessage(
-          `Changed ${updatedPerson.name}'s number`
+          {
+            message: `Changed ${updatedPerson.name}'s number`,
+            success: true
+          }
         )
-        setTimeout(() => setMessage(''), 5000)
+        setTimeout(() => setMessage({}), 5000)
         setNewName('')
         setNewNumber('')
+      })
+      .catch(error => {
+        setMessage(
+          {
+            message: `Information of ${updatedPerson.name} has already been removed from the server`,
+            success: false
+          }
+        )
+        setTimeout(() => setMessage({}), 5000)
+        setPersons(persons.filter(person => person.id !== id))
       })
   }
 
@@ -78,9 +91,12 @@ const App = () => {
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
         setMessage(
-          `Added ${person.name}`
+          {
+            message: `Added ${person.name}`,
+            success: true
+          }
         )
-        setTimeout(() => setMessage(''), 5000)
+        setTimeout(() => setMessage({}), 5000)
         setNewName('')
         setNewNumber('')
       })

@@ -11,13 +11,15 @@ const Notification = ({ message }) => {
         marginBottom: 10
     }
 
-    if (message === '') {
+    const errorStyle = {...successStyle, color: 'red'}
+
+    if (Object.keys(message).length === 0) {
       return null
     }
   
     return (
-      <div style={successStyle}>
-        {message}
+      <div style={message.success ? successStyle : errorStyle}>
+        {message.message}
       </div>
     )
 }
