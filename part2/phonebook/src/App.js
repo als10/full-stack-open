@@ -30,6 +30,13 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  const notify = (message, success) => {
+    setMessage(
+      { message: message, success: success }
+    )
+    setTimeout(() => setMessage({}), 5000)
+  }
+
   const updatePerson = (id) => {
     const result = window.confirm(
       `${newName} is already added to phonebook, replace the old number with a new one?`
@@ -49,25 +56,18 @@ const App = () => {
                       : person
           )
         )
-        setMessage(
-          {
-            message: `Changed ${updatedPerson.name}'s number`,
-            success: true
-          }
-        )
-        setTimeout(() => setMessage({}), 5000)
+        notify(`Changed ${updatedPerson.name}'s number`, true)
         setNewName('')
         setNewNumber('')
       })
       .catch(error => {
-        setMessage(
-          {
-            message: `Information of ${updatedPerson.name} has already been removed from the server`,
-            success: false
-          }
-        )
-        setTimeout(() => setMessage({}), 5000)
-        setPersons(persons.filter(person => person.id !== id))
+        if (error.response.data.error.includes('Validation')) {
+          notify(error.response.data.error, false)
+        }
+        else {
+          notify(`Information of ${updatedPerson.name} has already been removed from the server`, false)
+          setPersons(persons.filter(person => person.id !== id))
+        }
       })
   }
 
@@ -90,15 +90,12 @@ const App = () => {
       .create(person)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
-        setMessage(
-          {
-            message: `Added ${person.name}`,
-            success: true
-          }
-        )
-        setTimeout(() => setMessage({}), 5000)
+        notify(`Added ${person.name}`, true)
         setNewName('')
         setNewNumber('')
+      })
+      .catch(error => {
+        notify(error.response.data.error, false)
       })
   }
 
@@ -111,13 +108,7 @@ const App = () => {
     personService
       .remove(id)
       .then(() => {
-        setMessage(
-          {
-            message: `Deleted ${name}`,
-            success: true
-          }
-        )
-        setTimeout(() => setMessage({}), 5000)
+        notify(`Deleted ${name}`, true)
         setPersons(persons.filter(person => person.id !== id))
       })
   }
