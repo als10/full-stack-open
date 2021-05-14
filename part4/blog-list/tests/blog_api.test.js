@@ -60,6 +60,19 @@ test('a valid blog can be added ', async () => {
   )
 })
 
+test('if likes is missing, likes equals zero', async () => {
+  const newBlog = {
+    title: 'Food Blog',
+    author: 'Gordon Ramsay',
+    url: 'https://foodblog.com/'
+  }
+
+  await api.post('/api/blogs').send(newBlog)
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd.find(blog => blog.title === newBlog.title).likes)
+    .toBe(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 }) 
