@@ -3,11 +3,11 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYwOWVlMjJkNzhlZDRlODQzMDZlNTE2MiIsImlhdCI6MTYyMTAyNjM0OH0.bLymHQ47JZJdP1P4qtfsld_myX0adJvFEVjpg48MtPQ
 
 {
-    "title": "TDD harms architecture",
+    "title": "Type wars",
     "author": "Robert C. Martin",
-    "url": "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
-    "likes": 0,
-    "userId": "609ee22d78ed4e84306e5162"
+    "url": "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+    "likes": 2,
+    "userId": "609ee22978ed4e84306e5161"
 }
 
 ###
@@ -16,11 +16,11 @@ Content-Type: application/json
 Authorization: bearer notrealtoken
 
 {
-    "title": "TDD harms architecture",
+    "title": "Type wars",
     "author": "Robert C. Martin",
-    "url": "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
-    "likes": 0,
-    "userId": "609ee22d78ed4e84306e5162"
+    "url": "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+    "likes": 2,
+    "userId": "609ee22978ed4e84306e5161"
 }
 
 ###
