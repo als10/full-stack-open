@@ -37,3 +37,86 @@ describe('when there is initially one user in db', () => {
     expect(usernames).toContain(newUser.username)
   })
 })
+
+describe('adding a new user', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
+  })
+
+  test('fails with proper statuscode and message if username is missing', async () => {
+    const userWithoutUsername = {
+      name: 'Brad Pitt',
+      password: 'password'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(userWithoutUsername)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+    
+    expect(result.body.error).toContain('`username` is required')
+  })
+
+  test('fails with proper statuscode and message if password is missing', async () => {
+    const userWithoutPassword = {
+      username: 'brad',
+      name: 'Brad Pitt'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(userWithoutPassword)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+    
+    expect(result.body.error).toContain('password missing')
+  })
+
+  test('fails with proper statuscode and message if username already taken', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'root',
+      name: 'Superuser',
+      password: 'salainen',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.error).toContain('`username` to be unique')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  test('fails with proper statuscode and message if username is too short', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'ab',
+      name: 'ABC DEF',
+      password: 'thisisapass',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.error).toContain('is shorter than the minimum')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+})
