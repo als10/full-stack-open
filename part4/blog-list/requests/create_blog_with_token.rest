@@ -24,3 +24,29 @@ Authorization: bearer notrealtoken
 }
 
 ###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYwOWVlMjJkNzhlZDRlODQzMDZlNTE2MiIsImlhdCI6MTYyMTAyNjM0OH0.bLymHQ47JZJdP1P4qtfsld_myX0adJvFEVjpg48MtPQ
+
+{
+    "title": "First class tests",
+    "author": "Robert C. Martin",
+    "url": "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
+    "likes": 10,
+    "userId": "609ee22978ed4e84306e5161"
+}
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer notrealtoken
+
+{
+    "title": "First class tests",
+    "author": "Robert C. Martin",
+    "url": "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
+    "likes": 10,
+    "userId": "609ee22978ed4e84306e5161"
+}
+
+###
