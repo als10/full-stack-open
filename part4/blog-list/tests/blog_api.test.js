@@ -73,6 +73,31 @@ test('if likes is missing, likes equals zero', async () => {
     .toBe(0)
 })
 
+test('if author or url is missing, respond with status code 400', async () => {
+  const blogWithoutTitle = {
+    author: 'Gordon Ramsay',
+    url: 'https://foodblog.com/',
+    likes: 17
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutTitle)
+    .expect(400)
+
+
+  const blogWithoutURL = {
+    title: 'Food Blog',
+    author: 'Gordon Ramsay',
+    likes: 17
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutURL)
+    .expect(400)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 }) 
