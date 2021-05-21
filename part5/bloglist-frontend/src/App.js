@@ -119,7 +119,7 @@ const App = () => {
         (<div>
           <h2>Log in to application</h2>
           <Notification message={message} />
-          <LoginForm handleLogin={handleLogin} message={message}/>
+          <LoginForm handleLogin={handleLogin}/>
         </div>) :
         (<div>
           <h2>blogs</h2>
