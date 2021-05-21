@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 const LoginForm = ({ handleLogin }) => {
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   LoginForm.propTypes = {
     handleLogin: PropTypes.func.isRequired
@@ -20,7 +20,7 @@ const LoginForm = ({ handleLogin }) => {
     <form onSubmit={ handleClick }>
       <div>
         username
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -29,7 +29,7 @@ const LoginForm = ({ handleLogin }) => {
       </div>
       <div>
         password
-          <input
+        <input
           type="password"
           value={password}
           name="Password"

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 
 const CreateBlog = ({ createBlog }) => {
-  const [title, setTitle] = useState('') 
-  const [author, setAuthor] = useState('') 
-  const [url, setUrl] = useState('') 
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   const handleClick = (event) => {
     event.preventDefault()

@@ -19,7 +19,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const App = () => {
     try {
       const updatedBlog = await blogService.update(id, blog)
       setBlogs(blogs.map(blog =>
-        blog.id === id ? {...updatedBlog, user: blog.user} : blog
+        blog.id === id ? { ...updatedBlog, user: blog.user } : blog
       ).sort((a, b) => b.likes - a.likes))
     } catch (exception) {
       notify(exception, false)
@@ -95,16 +95,16 @@ const App = () => {
 
   const blogForm = () => (
     <Togglable buttonLabel='create new blog' ref={blogFormRef}>
-        <BlogForm createBlog={addBlog} />
+      <BlogForm createBlog={addBlog} />
     </Togglable>
   )
 
   const blogsList = () => (
     <div>
       {blogs.map(blog =>
-        <Blog 
-          key={blog.id} 
-          blog={blog} 
+        <Blog
+          key={blog.id}
+          blog={blog}
           user={user}
           updateBlog={updateBlog}
           removeBlog={removeBlog}
@@ -115,7 +115,7 @@ const App = () => {
 
   return (
     <>
-      {user === null ? 
+      {user === null ?
         (<div>
           <h2>Log in to application</h2>
           <Notification message={message} />

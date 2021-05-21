@@ -30,9 +30,9 @@ const Blog = ({ blog, user, updateBlog, removeBlog }) => {
         <button onClick={likeBlog}>like</button>
       </div>
       <div>{blog.user.name}</div>
-      {user.username === blog.user.username && 
+      {user.username === blog.user.username &&
       (<button onClick={() => removeBlog(blog.id)}>remove</button>)}
-    </div>     
+    </div>
   )
 
   return (
@@ -42,7 +42,7 @@ const Blog = ({ blog, user, updateBlog, removeBlog }) => {
         {detailsVisible ? 'hide' : 'view'}
       </button>
       {detailsVisible && details()}
-    </div>  
+    </div>
   )
 }
 
