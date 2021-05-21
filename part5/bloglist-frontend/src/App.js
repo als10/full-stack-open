@@ -80,6 +80,19 @@ const App = () => {
     }
   }
 
+  const removeBlog = async (id) => {
+    const blog = blogs.find(blog => blog.id === id)
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      try {
+        await blogService.remove(id)
+        setBlogs(blogs.filter(blog => blog.id !== id))
+        notify(`Removed ${blog.title} by ${blog.author}`, true)
+      } catch (exception) {
+        notify(exception, false)
+      }
+    }
+  }
+
   const blogForm = () => (
     <Togglable buttonLabel='create new blog' ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
@@ -89,7 +102,13 @@ const App = () => {
   const blogsList = () => (
     <div>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+        <Blog 
+          key={blog.id} 
+          blog={blog} 
+          user={user}
+          updateBlog={updateBlog}
+          removeBlog={removeBlog}
+        />
       )}
     </div>
   )
