@@ -13,10 +13,6 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState({})
-  const [blogFormVisible, setBlogFormVisible] = useState(false)
-
-  const hideWhenVisible = { display: blogFormVisible ? 'none' : '' }
-  const showWhenVisible = { display: blogFormVisible ? '' : 'none' }
 
   const blogFormRef = useRef()
 
