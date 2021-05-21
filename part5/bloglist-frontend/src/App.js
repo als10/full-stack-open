@@ -18,7 +18,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
     )  
   }, [])
 
@@ -62,7 +62,7 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     try {
       const newBlog = await blogService.create(blog)
-      setBlogs(blogs.concat(newBlog))
+      setBlogs(blogs.concat(newBlog).sort((a, b) => b.likes - a.likes))
       notify(`a new blog ${newBlog.title} by ${newBlog.author} added`, true)
     } catch (exception) {
       notify(exception, false)
@@ -72,11 +72,9 @@ const App = () => {
   const updateBlog = async (id, blog) => {
     try {
       const updatedBlog = await blogService.update(id, blog)
-      setBlogs(blogs.map(blog => {
-        return blog.id === id 
-          ? {...updatedBlog, user: blog.user}
-          : blog
-      }))
+      setBlogs(blogs.map(blog =>
+        blog.id === id ? {...updatedBlog, user: blog.user} : blog
+      ).sort((a, b) => b.likes - a.likes))
     } catch (exception) {
       notify(exception, false)
     }
