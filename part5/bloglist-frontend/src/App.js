@@ -62,8 +62,18 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     try {
       const newBlog = await blogService.create(blog)
-      setBlogs(blogs.concat(newBlog))
+      setBlogs(await blogService.getAll())
       notify(`a new blog ${newBlog.title} by ${newBlog.author} added`, true)
+    } catch (exception) {
+      notify(exception, false)
+    }
+  }
+
+  const updateBlog = async (id, blog) => {
+    try {
+      const updatedBlog = await blogService.update(id, blog)
+      setBlogs(await blogService.getAll())
+      notify(`blog ${updatedBlog.title} by ${updatedBlog.author} updated`, true)
     } catch (exception) {
       notify(exception, false)
     }
@@ -78,7 +88,7 @@ const App = () => {
   const blogsList = () => (
     <div>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
       )}
     </div>
   )
