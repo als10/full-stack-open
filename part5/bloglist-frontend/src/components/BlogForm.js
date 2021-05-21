@@ -7,14 +7,10 @@ const CreateBlog = ({ createBlog }) => {
 
   const handleClick = (event) => {
     event.preventDefault()
-    try {
-      createBlog({ title, author, url })
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-    } catch (exception) {
-      console.log(exception)
-    }
+    createBlog({ title, author, url })
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   return (
