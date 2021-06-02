@@ -72,5 +72,41 @@ describe('Blog app', function() {
         cy.should('not.contain', 'this is the title')
       })
     })
+
+    describe('and several blogs exist', function() {
+      beforeEach(function () {
+        cy.createBlog({
+          title: 'this is the title 1',
+          author: 'mr author 1',
+          url: 'www.blog.com',
+          likes: 0
+        })
+
+        cy.createBlog({
+          title: 'this is the title 2',
+          author: 'mr author 2',
+          url: 'www.blog.com',
+          likes: 6
+        })
+
+        cy.createBlog({
+          title: 'this is the title 3',
+          author: 'mr author 3',
+          url: 'www.blog.com',
+          likes: 12
+        })
+      })
+
+      it.only('they are ordered according to likes', function() {
+        const blogTitlesInOrderOfLikes = [
+          'this is the title 3',
+          'this is the title 2',
+          'this is the title 1'
+        ]
+        cy.get('.blogs-list>div').then(($blogs) => {
+          $blogs.map((i, $blog) => cy.wrap($blog).contains(blogTitlesInOrderOfLikes[i]))
+        })
+      })
+    })
   })
 })

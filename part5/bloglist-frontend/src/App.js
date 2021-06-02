@@ -100,7 +100,7 @@ const App = () => {
   )
 
   const blogsList = () => (
-    <div>
+    <div className="blogs-list">
       {blogs.map(blog =>
         <Blog
           key={blog.id}
