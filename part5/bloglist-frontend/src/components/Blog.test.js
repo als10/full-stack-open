@@ -3,23 +3,23 @@ import '@testing-library/jest-dom/extend-expect'
 import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
 
-describe('<Blog /> renders correctly', () => {
-  const blog = {
-    title: 'This is a title',
-    author: 'Mr Author',
-    url: 'www.blog.com',
-    likes: 10,
-    user: {
-      name: 'Super User',
-      username: 'root'
-    }
-  }
-
-  const user = {
+const blog = {
+  title: 'This is a title',
+  author: 'Mr Author',
+  url: 'www.blog.com',
+  likes: 10,
+  user: {
     name: 'Super User',
     username: 'root'
   }
+}
 
+const user = {
+  name: 'Super User',
+  username: 'root'
+}
+
+describe('blog rendered in default mode', () => {
   let component
 
   beforeEach(() => {
@@ -47,17 +47,38 @@ describe('<Blog /> renders correctly', () => {
       '10'
     )
   })
+})
 
-  test('after clicking button, likes and url are displayed', () => {
-    const button = component.getByText('view')
-    fireEvent.click(button)
+test('after clicking view button, likes and url are displayed', () => {
+  const component = render(
+    <Blog blog={blog} user={user} />
+  )
 
-    expect(component.container).toHaveTextContent(
-      'www.blog.com'
-    )
+  const button = component.getByText('view')
+  fireEvent.click(button)
 
-    expect(component.container).toHaveTextContent(
-      '10'
-    )
-  })
+  expect(component.container).toHaveTextContent(
+    'www.blog.com'
+  )
+
+  expect(component.container).toHaveTextContent(
+    '10'
+  )
+})
+
+test('the event handler received as props is called twice when the like button is clicked twice', () => {
+  const mockHandler = jest.fn()
+
+  const component = render(
+    <Blog blog={blog} user={user} updateBlog={mockHandler} />
+  )
+
+  const button = component.getByText('view')
+  fireEvent.click(button)
+
+  const likeButton = component.getByText('like')
+  fireEvent.click(likeButton)
+  fireEvent.click(likeButton)
+
+  expect(mockHandler.mock.calls).toHaveLength(2)
 })
