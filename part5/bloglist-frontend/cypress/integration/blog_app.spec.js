@@ -64,6 +64,13 @@ describe('Blog app', function() {
         cy.get('@blog').contains('like').click()
         cy.get('@blog').contains('likes 1')
       })
+
+      it('the user who created it can delete it', function () {
+        cy.contains('this is the title').parent().as('blog')
+        cy.get('@blog').find('button').click()
+        cy.get('@blog').contains('remove').click()
+        cy.should('not.contain', 'this is the title')
+      })
     })
   })
 })
