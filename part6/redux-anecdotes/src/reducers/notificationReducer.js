@@ -9,14 +9,18 @@ const reducer = (state = null, action) => {
   }
 }
 
+let timeoutID
+
 export const setNotification = (message, delay) => {
   return async dispatch => {
+    if (timeoutID) clearTimeout(timeoutID)
     dispatch({
       type: 'SET_NOTIF',
       message
     })
-    setTimeout(() => {
+    timeoutID = setTimeout(() => {
       dispatch({ type: 'DEL_NOTIF' })
+      timeoutID = null
     }, delay * 1000)
   }
 }
