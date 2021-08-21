@@ -34,6 +34,11 @@
       "content": "hello",
       "votes": 0,
       "id": "DGOsZPj"
+    },
+    {
+      "content": "bye bye",
+      "votes": 0,
+      "id": "n7S5iGG"
     }
   ]
 }
