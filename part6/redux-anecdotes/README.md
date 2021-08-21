@@ -1,1 +1,1 @@
-Solutions for exercises 6.3 to 6.18
+Solutions for exercises 6.3 to 6.21
