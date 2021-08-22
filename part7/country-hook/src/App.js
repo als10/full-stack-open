@@ -25,8 +25,6 @@ const useCountry = (name) => {
       .catch(err => setCountry({ found: false }))
   }, [name])
 
-  console.log(country)
-
   return country
 }
 
