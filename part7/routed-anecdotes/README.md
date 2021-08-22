@@ -1,1 +1,1 @@
-Solutions for exercises 7.1 to 7.3
+Solutions for exercises 7.1 to 7.6
