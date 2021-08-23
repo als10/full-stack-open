@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Blog from './components/Blog'
@@ -8,15 +8,12 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { createBlog, updateBlog as updateBlogAction, deleteBlog, initializeBlogs } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
-
-import blogService from './services/blogs'
-import loginService from './services/login'
+import { initUser, login, resetUser } from './reducers/userReducer'
 
 const App = () => {
   const message = useSelector(state => state.notification)
   const blogs = useSelector(state => state.blogs.sort((a, b) => b.likes - a.likes))
-
-  const [user, setUser] = useState(null)
+  const user = useSelector(state => state.user)
 
   const dispatch = useDispatch()
 
@@ -27,12 +24,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedInUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      blogService.setToken(user.token)
-      setUser(user)
-    }
+    dispatch(initUser())
   }, [])
 
   const notify = (message, success) => {
@@ -41,23 +33,13 @@ const App = () => {
 
   const handleLogin = async (username, password) => {
     try {
-      const user = await loginService.login({
-        username, password,
-      })
-      window.localStorage.setItem(
-        'loggedInUser', JSON.stringify(user)
-      )
-      blogService.setToken(user.token)
-      setUser(user)
+      dispatch(login(username, password))
     } catch (exception) {
       notify('wrong username or password', false)
     }
   }
 
-  const logout = () => {
-    window.localStorage.removeItem('loggedInUser')
-    setUser(null)
-  }
+  const logout = () => dispatch(resetUser())
 
   const addBlog = async (blog) => {
     blogFormRef.current.toggleVisibility()
