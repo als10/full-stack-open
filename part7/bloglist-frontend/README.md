@@ -1,0 +1,1 @@
+Solutions for exercises 7.9 to 7.21
