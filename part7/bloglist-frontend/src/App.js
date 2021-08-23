@@ -6,7 +6,7 @@ import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import { createBlog, initializeBlogs } from './reducers/blogReducer'
+import { createBlog, updateBlog as updateBlogAction, deleteBlog, initializeBlogs } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
 
 import blogService from './services/blogs'
@@ -69,29 +69,25 @@ const App = () => {
     }
   }
 
-  // const updateBlog = async (id, blog) => {
-  //   try {
-  //     const updatedBlog = await blogService.update(id, blog)
-  //     setBlogs(blogs.map(blog =>
-  //       blog.id === id ? { ...updatedBlog, user: blog.user } : blog
-  //     ).sort((a, b) => b.likes - a.likes))
-  //   } catch (exception) {
-  //     notify(exception, false)
-  //   }
-  // }
+  const updateBlog = async (id, blog) => {
+    try {
+      dispatch(updateBlogAction(id, blog))
+    } catch (exception) {
+      notify(exception, false)
+    }
+  }
 
-  // const removeBlog = async (id) => {
-  //   const blog = blogs.find(blog => blog.id === id)
-  //   if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-  //     try {
-  //       await blogService.remove(id)
-  //       setBlogs(blogs.filter(blog => blog.id !== id))
-  //       notify(`Removed ${blog.title} by ${blog.author}`, true)
-  //     } catch (exception) {
-  //       notify(exception, false)
-  //     }
-  //   }
-  // }
+  const removeBlog = async (id) => {
+    const blog = blogs.find(blog => blog.id === id)
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      try {
+        dispatch(deleteBlog(id))
+        notify(`Removed ${blog.title} by ${blog.author}`, true)
+      } catch (exception) {
+        notify(exception, false)
+      }
+    }
+  }
 
   const blogForm = () => (
     <Togglable buttonLabel='create new blog' ref={blogFormRef}>
@@ -106,8 +102,8 @@ const App = () => {
           key={blog.id}
           blog={blog}
           user={user}
-          updateBlog={() => {}}
-          removeBlog={() => {}}
+          updateBlog={updateBlog}
+          removeBlog={removeBlog}
         />
       )}
     </div>
