@@ -1,18 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import { setNotification } from './reducers/notificationReducer'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
+  const message = useSelector(state => state.notification)
+
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState({})
+
+  const dispatch = useDispatch()
 
   const blogFormRef = useRef()
 
@@ -32,10 +37,7 @@ const App = () => {
   }, [])
 
   const notify = (message, success) => {
-    setMessage(
-      { message: message, success: success }
-    )
-    setTimeout(() => setMessage({}), 5000)
+    dispatch(setNotification(message, success, 5))
   }
 
   const handleLogin = async (username, password) => {
