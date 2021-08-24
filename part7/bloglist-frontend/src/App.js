@@ -6,9 +6,16 @@ import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+
 import { createBlog, updateBlog as updateBlogAction, deleteBlog, initializeBlogs } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
 import { initUser, login, resetUser } from './reducers/userReducer'
+
+import {
+  BrowserRouter as Router,
+  Switch, Route, Link
+} from 'react-router-dom'
+import Users from './components/Users'
 
 const App = () => {
   const message = useSelector(state => state.notification)
@@ -92,7 +99,7 @@ const App = () => {
   )
 
   return (
-    <>
+    <Router>
       {user === null ?
         (<div>
           <h2>Log in to application</h2>
@@ -107,10 +114,17 @@ const App = () => {
             <button onClick={logout}>logout</button>
           </div>
           <br />
-          {blogForm()}
-          {blogsList()}
+          <Switch>
+            <Route path="/users">
+              <Users />
+            </Route>
+            <Route path="/">
+              {blogForm()}
+              {blogsList()}
+            </Route>
+          </Switch>
         </div>)}
-    </>
+    </Router>
   )
 }
 
