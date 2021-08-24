@@ -17,6 +17,16 @@ import { initUser, login, resetUser } from './reducers/userReducer'
 import { Switch, Route, Link } from 'react-router-dom'
 
 const App = () => {
+  const navbarStyle = {
+    backgroundColor: 'lightGray',
+    display: 'flex',
+    padding: 5
+  }
+
+  const navbarItemStyle = {
+    marginLeft: 5,
+  }
+
   const message = useSelector(state => state.notification)
   const blogs = useSelector(state => state.blogs.sort((a, b) => b.likes - a.likes))
   const user = useSelector(state => state.user)
@@ -83,13 +93,16 @@ const App = () => {
           <LoginForm handleLogin={handleLogin}/>
         </div>) :
         (<div>
-          <h2>blogs</h2>
-          <Notification message={message} />
-          <div>
-            {user.name} logged in
-            <button onClick={logout}>logout</button>
+          <div style={navbarStyle}>
+            <Link style={navbarItemStyle} to="/">blogs</Link>
+            <Link style={navbarItemStyle} to="/users">users</Link>
+            <div style={navbarItemStyle}>{user.name} logged in</div>
+            <button style={navbarItemStyle} onClick={logout}>logout</button>
           </div>
-          <br />
+
+          <h2>blog app</h2>
+          <Notification message={message} />
+
           <Switch>
             <Route path="/users/:id">
               <User />
