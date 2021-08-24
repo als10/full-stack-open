@@ -37,19 +37,27 @@ const BlogDetails = () => {
     }
   }
 
+  if (!blog) return null
+
   return (
-    blog &&
+    <div>
+      <h2>{blog.title} by {blog.author}</h2>
+      <a href={blog.url}>{blog.url}</a>
       <div>
-        <h2>{blog.title} by {blog.author}</h2>
-        <a href={blog.url}>{blog.url}</a>
-        <div>
-          {blog.likes} likes
-          <button onClick={likeBlog}>like</button>
-        </div>
-        <div>added by {blog.user.name}</div>
-        {user.username === blog.user.username &&
-          <button onClick={removeBlog}>remove</button>}
+        {blog.likes} likes
+        <button onClick={likeBlog}>like</button>
       </div>
+      <div>added by {blog.user.name}</div>
+      {user.username === blog.user.username &&
+        <button onClick={removeBlog}>remove</button>}
+
+      <div>
+        <h3>comments</h3>
+        <ul>
+          {blog.comments.map((c, i) => <li key={i}>{c}</li>)}
+        </ul>
+      </div>
+    </div>
   )
 }
 

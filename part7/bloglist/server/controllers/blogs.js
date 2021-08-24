@@ -48,4 +48,13 @@ blogsRouter.put('/:id', async (request, response) => {
   response.json(updatedBlog)
 })
 
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    request.params.id,
+    { $push: { comments: request.body.comment } },
+    { new: true, runValidators: true }
+  )
+  response.json(updatedBlog)
+})
+
 module.exports = blogsRouter
