@@ -8,8 +8,9 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import Users from './components/Users'
 import User from './components/User'
+import BlogDetails from './components/BlogDetails'
 
-import { createBlog, updateBlog as updateBlogAction, deleteBlog, initializeBlogs } from './reducers/blogReducer'
+import { createBlog, initializeBlogs } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
 import { initUser, login, resetUser } from './reducers/userReducer'
 
@@ -56,26 +57,6 @@ const App = () => {
     }
   }
 
-  const updateBlog = async (id, blog) => {
-    try {
-      dispatch(updateBlogAction(id, blog))
-    } catch (exception) {
-      notify(exception, false)
-    }
-  }
-
-  const removeBlog = async (id) => {
-    const blog = blogs.find(blog => blog.id === id)
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      try {
-        dispatch(deleteBlog(id))
-        notify(`Removed ${blog.title} by ${blog.author}`, true)
-      } catch (exception) {
-        notify(exception, false)
-      }
-    }
-  }
-
   const blogForm = () => (
     <Togglable buttonLabel='create new blog' ref={blogFormRef}>
       <BlogForm createBlog={addBlog} />
@@ -88,9 +69,6 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
-          user={user}
-          updateBlog={updateBlog}
-          removeBlog={removeBlog}
         />
       )}
     </div>
@@ -118,6 +96,9 @@ const App = () => {
             </Route>
             <Route path="/users">
               <Users />
+            </Route>
+            <Route path="/blogs/:id">
+              <BlogDetails />
             </Route>
             <Route path="/">
               {blogForm()}
