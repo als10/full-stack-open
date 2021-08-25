@@ -1,4 +1,5 @@
 import React from 'react'
+import { ListGroup } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import { useRouteMatch } from 'react-router'
 
@@ -14,11 +15,11 @@ const User = () => {
   return (
     <div>
       <h2>{user.name}</h2>
-      <strong>added blogs</strong>
-      <ul>
+      <strong>Added blogs</strong>
+      <ListGroup style={{ marginTop: 16 }}>
         {user.blogs.map(b =>
-          <li key={b.id}>{b.title}</li>)}
-      </ul>
+          <ListGroup.Item key={b.id}>{b.title}</ListGroup.Item>)}
+      </ListGroup>
     </div>
   )
 }

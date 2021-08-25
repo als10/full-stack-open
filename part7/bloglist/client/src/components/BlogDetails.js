@@ -4,6 +4,7 @@ import { useRouteMatch, useHistory } from 'react-router'
 import { updateBlog, deleteBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { addComment as addCommentAction } from '../reducers/blogReducer'
+import { Button, Card, FormControl, InputGroup, ListGroup } from 'react-bootstrap'
 
 const Comments = ({ id, comments }) => {
   const [comment, setComment] = useState('')
@@ -16,19 +17,19 @@ const Comments = ({ id, comments }) => {
   }
 
   return (
-    <div>
-      <h3>comments</h3>
-      <form onSubmit={addComment}>
-        <input
+    <div style={{ marginTop: 16 }}>
+      <h3>Comments</h3>
+      <InputGroup>
+        <FormControl
           id="comment"
           type="text"
           value={comment}
           onChange={({ target }) => setComment(target.value)} />
-        <button type="submit">add comment</button>
-      </form>
-      <ul>
-        {comments.map((c, i) => <li key={i}>{c}</li>)}
-      </ul>
+        <Button variant="primary" onClick={addComment}>Add Comment</Button>
+      </InputGroup>
+      <ListGroup>
+        {comments.map((c, i) => <ListGroup.Item key={i}>{c}</ListGroup.Item>)}
+      </ListGroup>
     </div>
   )
 }
@@ -69,16 +70,23 @@ const BlogDetails = () => {
   if (!blog) return null
 
   return (
-    <div>
-      <h2>{blog.title} by {blog.author}</h2>
-      <a href={blog.url}>{blog.url}</a>
-      <div>
-        {blog.likes} likes
-        <button onClick={likeBlog}>like</button>
-      </div>
-      <div>added by {blog.user.name}</div>
-      {user.username === blog.user.username &&
-        <button onClick={removeBlog}>remove</button>}
+    <div style={{ marginTop: 32 }}>
+      <Card>
+        <Card.Body>
+          <Card.Title>{blog.title}</Card.Title>
+          <Card.Subtitle className="mb-2 text-muted">{blog.author}</Card.Subtitle>
+          <Card.Link href={blog.url}>{blog.url}</Card.Link>
+          <div>
+            {blog.likes} likes
+            <Button variant="primary" size="sm" style={{ marginLeft: 4 }} onClick={likeBlog}>
+              Like
+            </Button>
+          </div>
+          <div>added by {blog.user.name}</div>
+        </Card.Body>
+        {user.username === blog.user.username &&
+          <Button variant="primary" onClick={removeBlog}>Remove</Button>}
+      </Card>
       <Comments id={blog.id} comments={blog.comments} />
     </div>
   )

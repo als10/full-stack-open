@@ -14,19 +14,11 @@ import { createBlog, initializeBlogs } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
 import { initUser, login, resetUser } from './reducers/userReducer'
 
-import { Switch, Route, Link } from 'react-router-dom'
+import { Switch, Route, useHistory } from 'react-router-dom'
+
+import { Button, Container, Nav, Navbar, Table } from 'react-bootstrap'
 
 const App = () => {
-  const navbarStyle = {
-    backgroundColor: 'lightGray',
-    display: 'flex',
-    padding: 5
-  }
-
-  const navbarItemStyle = {
-    marginLeft: 5,
-  }
-
   const message = useSelector(state => state.notification)
   const blogs = useSelector(state => state.blogs.sort((a, b) => b.likes - a.likes))
   const user = useSelector(state => state.user)
@@ -34,6 +26,8 @@ const App = () => {
   const dispatch = useDispatch()
 
   const blogFormRef = useRef()
+
+  const history = useHistory()
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -55,7 +49,10 @@ const App = () => {
     }
   }
 
-  const logout = () => dispatch(resetUser())
+  const logout = () => {
+    dispatch(resetUser())
+    history.push('/')
+  }
 
   const addBlog = async (blog) => {
     blogFormRef.current.toggleVisibility()
@@ -68,39 +65,54 @@ const App = () => {
   }
 
   const blogForm = () => (
-    <Togglable buttonLabel='create new blog' ref={blogFormRef}>
+    <Togglable buttonLabel='Create a New Blog' ref={blogFormRef}>
       <BlogForm createBlog={addBlog} />
     </Togglable>
   )
 
   const blogsList = () => (
-    <div className="blogs-list">
-      {blogs.map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-        />
-      )}
-    </div>
+    <Table striped hover className="blogs-list">
+      <tbody>
+        {blogs.map(blog =>
+          <tr key={blog.id}>
+            <td><Blog blog={blog} /></td>
+          </tr>
+        )}
+      </tbody>
+    </Table>
   )
 
   return (
-    <>
-      {user === null ?
-        (<div>
+    <div>
+      <Navbar bg="light">
+        <Container>
+          <Navbar.Brand>Blog App</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          {user &&
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto">
+                <Nav.Link href="/">Blogs</Nav.Link>
+                <Nav.Link href="/users">Users</Nav.Link>
+              </Nav>
+              <Nav style={{ marginLeft: 'auto' }}>
+                <Navbar.Text>{user.name} logged in</Navbar.Text>
+                <Button variant="primary" style={{ marginLeft: 16 }} onClick={logout}>
+                  Logout
+                </Button>
+              </Nav>
+            </Navbar.Collapse>}
+        </Container>
+      </Navbar>
+
+      {user === null
+        ?
+        <div className="container">
           <h2>Log in to application</h2>
           <Notification message={message} />
           <LoginForm handleLogin={handleLogin}/>
-        </div>) :
-        (<div>
-          <div style={navbarStyle}>
-            <Link style={navbarItemStyle} to="/">blogs</Link>
-            <Link style={navbarItemStyle} to="/users">users</Link>
-            <div style={navbarItemStyle}>{user.name} logged in</div>
-            <button style={navbarItemStyle} onClick={logout}>logout</button>
-          </div>
-
-          <h2>blog app</h2>
+        </div>
+        :
+        <div className="container">
           <Notification message={message} />
 
           <Switch>
@@ -118,8 +130,8 @@ const App = () => {
               {blogsList()}
             </Route>
           </Switch>
-        </div>)}
-    </>
+        </div>}
+    </div>
   )
 }
 
