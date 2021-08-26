@@ -1,5 +1,20 @@
 const { ApolloServer, gql } = require('apollo-server')
 const { v1: uuid } = require('uuid')
+const mongoose = require('mongoose')
+const Book = require('./models/book')
+const Author = require('./models/author')
+
+const MONGODB_URI = process.env.MONGODB_URI
+
+console.log('connecting to', MONGODB_URI)
+
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
+  .then(() => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connection to MongoDB:', error.message)
+  })
 
 let authors = [
   {
@@ -100,9 +115,9 @@ const typeDefs = gql`
   type Book {
     title: String!
     published: Int!
-    author: String!
-    id: ID!
+    author: Author!
     genres: [String!]!
+    id: ID!
   }
 
   type Query {
@@ -128,31 +143,26 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
+    bookCount: () => Book.collection.countDocuments(),
+    authorCount: () => Author.collection.countDocuments(),
     allBooks: (root, args) => {
       let filteredBooks = books
       if (args.author) filteredBooks = filteredBooks.filter(b => b.author === args.author)
       if (args.genre) filteredBooks = filteredBooks.filter(b => b.genres.includes(args.genre))
       return filteredBooks
     },
-    allAuthors: () => authors
+    allAuthors: () => Author.find({})
   },
   Mutation: {
     addBook: (root, args) => {
-      const book = { ...args, id: uuid()}
-      books = books.concat(book)
-      if (!authors.find(a => a.name === args.author)) {
-        authors = authors.concat({ name: args.author, id: uuid() })
-      }
-      return book
+      const book = new Book({ ...args, id: uuid()})
+      return book.save()
     },
-    editAuthor: (root, args) => {
-      const author = authors.find(a => a.name === args.name)
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({ name: args.name })
       if (!author) return null
-      const updatedAuthor = { ...author, born: args.setBornTo }
-      authors = authors.map(a => a.id === updatedAuthor.id ? updatedAuthor : a)
-      return updatedAuthor
+      author.born = args.setBornTo
+      return author.save()
     }
   },
   Author: {
