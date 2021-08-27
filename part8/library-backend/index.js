@@ -3,6 +3,7 @@ const { v1: uuid } = require('uuid')
 const mongoose = require('mongoose')
 const Book = require('./models/book')
 const Author = require('./models/author')
+require('dotenv').config()
 
 const MONGODB_URI = process.env.MONGODB_URI
 
@@ -112,6 +113,11 @@ const typeDefs = gql`
     id: ID!
   }
 
+  input AuthorInput {
+    name: String!
+    born: Int
+  }
+
   type Book {
     title: String!
     published: Int!
@@ -130,7 +136,7 @@ const typeDefs = gql`
   type Mutation {
     addBook(
       title: String!
-      author: String!
+      author: AuthorInput!
       published: Int!
       genres: [String!]!
     ): Book
@@ -145,17 +151,23 @@ const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
-    allBooks: (root, args) => {
-      let filteredBooks = books
-      if (args.author) filteredBooks = filteredBooks.filter(b => b.author === args.author)
-      if (args.genre) filteredBooks = filteredBooks.filter(b => b.genres.includes(args.genre))
-      return filteredBooks
+    allBooks: async (root, args) => {
+      // if (args.author) filteredBooks = filteredBooks.filter(b => b.author === args.author)
+      if (args.genre) {
+        return Book.find({ genres: { $in: [args.genre] } }).populate('author')
+      }
+      return Book.find({}).populate('author')
     },
     allAuthors: () => Author.find({})
   },
   Mutation: {
-    addBook: (root, args) => {
-      const book = new Book({ ...args, id: uuid()})
+    addBook: async (root, args) => {
+      let author = await Author.findOne({ name: args.author.name })
+      if (!author) {
+        author = new Author({ ...args.author })
+        await author.save()
+      }
+      const book = new Book({ ...args, author })
       return book.save()
     },
     editAuthor: async (root, args) => {
@@ -166,7 +178,7 @@ const resolvers = {
     }
   },
   Author: {
-    bookCount: (root) => books.filter(book => book.author === root.name).length
+    bookCount: (root) => Book.find({ author : root.id }).countDocuments()
   }
 }
 
