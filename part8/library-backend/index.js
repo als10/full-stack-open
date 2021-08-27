@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql, UserInputError } = require('apollo-server')
 const { v1: uuid } = require('uuid')
 const mongoose = require('mongoose')
 const Book = require('./models/book')
@@ -152,11 +152,15 @@ const resolvers = {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
-      // if (args.author) filteredBooks = filteredBooks.filter(b => b.author === args.author)
-      if (args.genre) {
-        return Book.find({ genres: { $in: [args.genre] } }).populate('author')
+      let query = {}
+      if (args.author) {
+        const author = await Author.findOne({ name: args.author })
+        query.author = author.id
       }
-      return Book.find({}).populate('author')
+      if (args.genre) {
+        query.genres = { $in: [args.genre] }
+      }
+      return Book.find(query).populate('author')
     },
     allAuthors: () => Author.find({})
   },
@@ -165,16 +169,40 @@ const resolvers = {
       let author = await Author.findOne({ name: args.author.name })
       if (!author) {
         author = new Author({ ...args.author })
-        await author.save()
+        try {
+          await author.save()
+        } catch (error) {
+          throw new UserInputError(error.message, {
+            invalidArgs: args
+          })
+        }
       }
       const book = new Book({ ...args, author })
-      return book.save()
+      try {
+        await book.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args
+        })
+      }
+      return book
     },
     editAuthor: async (root, args) => {
       const author = await Author.findOne({ name: args.name })
-      if (!author) return null
+      if (!author) {
+        throw new UserInputError('author does not exist', {
+          invalidArgs: args
+        })
+      }
       author.born = args.setBornTo
-      return author.save()
+      try {
+        await author.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args
+        })
+      }
+      return author
     }
   },
   Author: {
