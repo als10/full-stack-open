@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 export const ALL_BOOKS = gql`
 query {
   allBooks  {
+    genres
     title
     author {
       name
