@@ -19,6 +19,7 @@ const App = () => {
     setToken(null)
     localStorage.clear()
     client.resetStore()
+    setPage('authors')
   }
 
   return (
@@ -29,6 +30,7 @@ const App = () => {
         {token
           ? <>
               <button onClick={() => setPage('add')}>add book</button>
+              <button onClick={() => setPage('recommend')}>recommend</button>
               <button onClick={logout}>logout</button>
             </>
           : <button onClick={() => setPage('login')}>login</button>}
@@ -41,6 +43,11 @@ const App = () => {
 
       <Books
         show={page === 'books'}
+      />
+
+      <Books
+        show={page === 'recommend'}
+        recommend={true}
       />
 
       <NewBook

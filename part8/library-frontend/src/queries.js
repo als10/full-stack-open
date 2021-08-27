@@ -26,6 +26,14 @@ query {
 }
 `
 
+export const FAVORITE_GENRE = gql`
+query {
+  me {
+    favoriteGenre
+  }
+}
+`
+
 export const CREATE_BOOK = gql`
 mutation createBook($title: String!, $author: AuthorInput!, $published: Int!, $genres: [String!]!) {
   addBook(
@@ -60,9 +68,9 @@ mutation setBornTo($name: String!, $setBornTo: Int!) {
 `
 
 export const LOGIN = gql`
-  mutation login($username: String!, $password: String!) {
-    login(username: $username, password: $password)  {
-      value
-    }
+mutation login($username: String!, $password: String!) {
+  login(username: $username, password: $password)  {
+    value
   }
+}
 `
