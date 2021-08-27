@@ -37,7 +37,7 @@ const Authors = (props) => {
           )}
         </tbody>
       </table>
-      <EditAuthor authors={authors} />
+      {props.loggedIn && <EditAuthor authors={authors} />}
     </div>
   )
 }
