@@ -59,6 +59,8 @@ mutation createBook($title: String!, $author: AuthorInput!, $published: Int!, $g
     id
     title
     author {
+      id
+      bookCount
       name
       born
     }
