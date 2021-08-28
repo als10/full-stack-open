@@ -4,6 +4,7 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import LoginForm from './components/LoginForm'
 import NewBook from './components/NewBook'
+import Recommendations from './components/Recommendations'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -45,9 +46,8 @@ const App = () => {
         show={page === 'books'}
       />
 
-      <Books
+      <Recommendations
         show={page === 'recommend'}
-        recommend={true}
       />
 
       <NewBook
