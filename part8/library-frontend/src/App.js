@@ -5,7 +5,7 @@ import Books from './components/Books'
 import LoginForm from './components/LoginForm'
 import NewBook from './components/NewBook'
 import Recommendations from './components/Recommendations'
-import { BOOK_ADDED } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, BOOK_ADDED } from './queries'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -17,11 +17,28 @@ const App = () => {
     if (token) setToken(token)
   }, []) //eslint-disable-line
 
+  const updateCacheWith = (addedBook) => {
+    const booksInStore = client.readQuery({ query: ALL_BOOKS })
+    if (!booksInStore.allBooks.map(b => b.id).includes(addedBook.id)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks: booksInStore.allBooks.concat(addedBook) }
+      })
+    }
+
+    const authorsInStore = client.readQuery({ query: ALL_AUTHORS })
+    if (!authorsInStore.allAuthors.map(a => a.id).includes(addedBook.author.id)) {
+      client.writeQuery({
+        query: ALL_AUTHORS,
+        data: { allAuthors: authorsInStore.allAuthors.concat(addedBook.author) }
+      })
+    }
+  }
+
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
-      const { data : { bookAdded } } = subscriptionData
-      console.log(bookAdded)
-      window.alert(`book added: ${bookAdded.title} by ${bookAdded.author.name}`)
+      const bookAdded = subscriptionData.data.bookAdded
+      updateCacheWith(bookAdded)
     }
   })
 
@@ -61,6 +78,7 @@ const App = () => {
 
       <NewBook
         show={page === 'add'}
+        updateCacheWith={updateCacheWith}
       />
 
       <LoginForm
