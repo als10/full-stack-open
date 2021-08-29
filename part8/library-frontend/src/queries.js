@@ -90,3 +90,20 @@ mutation login($username: String!, $password: String!) {
   }
 }
 `
+
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      id
+      title
+      author {
+        id
+        bookCount
+        name
+        born
+      }
+      published
+      genres
+    }
+  }
+`
