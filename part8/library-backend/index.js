@@ -6,6 +6,8 @@ const Author = require('./models/author')
 const User = require('./models/user')
 require('dotenv').config()
 const { PubSub } = require('graphql-subscriptions')
+const DataLoader = require('dataloader')
+
 const pubsub = new PubSub()
 
 const MONGODB_URI = process.env.MONGODB_URI
@@ -19,6 +21,13 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
   .catch((error) => {
     console.log('error connection to MongoDB:', error.message)
   })
+
+mongoose.set('debug', true)
+
+const batchBookCount = async (keys) => {
+  const books = await Book.find({ author: { $in: keys } })
+  return keys.map(key => books.filter(book => `${book.author}` === key).length);
+}
 
 const typeDefs = gql`
   type User {
@@ -178,7 +187,7 @@ const resolvers = {
     }
   },
   Author: {
-    bookCount: (root) => Book.find({ author : root.id }).countDocuments()
+    bookCount: (root, args, { loaders }) => loaders.bookCount.load(root.id)
   }
 }
 
@@ -186,14 +195,19 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req }) => {
+    let context = {}
+    context.loaders = {
+      bookCount: new DataLoader(keys => batchBookCount(keys))
+    }
+
     const auth = req ? req.headers.authorization : null
     if (auth && auth.toLowerCase().startsWith('bearer ')) {
       const decodedToken = jwt.verify(
         auth.substring(7), process.env.JWT_SECRET
       )
-      const currentUser = await User.findById(decodedToken.id)
-      return { currentUser }
+      context.currentUser = await User.findById(decodedToken.id)
     }
+    return context
   }
 })
 
