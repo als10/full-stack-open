@@ -1,0 +1,1 @@
+Solutions for exercises 8.1 to 8.26
